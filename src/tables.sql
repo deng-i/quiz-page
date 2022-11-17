@@ -1,0 +1,37 @@
+DROP DATABASE cw2;
+
+CREATE DATABASE cw2;
+
+CREATE TABLE IF NOT EXISTS user(
+	username VARCHAR(255),
+	forename VARCHAR(255) NOT NULL,
+	surname VARCHAR(255) NOT NULL,
+	type VARCHAR(10) NOT NULL,
+	password VARCHAR(255) NOT NULL,
+	PRIMARY KEY(username));
+
+CREATE TABLE IF NOT EXISTS quiz(
+	id INT UNSIGNED AUTO_INCREMENT,
+	name VARCHAR(255) NOT NULL,
+	author_username VARCHAR(255),
+	available TINYINT NOT NULL,
+	duration INT UNSIGNED NOT NULL,
+	PRIMARY KEY(id),
+	FOREIGN KEY(author_username) REFERENCES user(username) ON DELETE CASCADE);
+
+CREATE TABLE IF NOT EXISTS question(
+	quiz_id INT UNSIGNED,
+	question VARCHAR(500),
+	options VARCHAR(200),
+	answer VARCHAR(200) NOT NULL,
+	PRIMARY KEY(quiz_id, question, options),
+	FOREIGN KEY(quiz_id) REFERENCES quiz(id) ON DELETE CASCADE);
+
+CREATE TABLE IF NOT EXISTS attempt(
+	quiz_id INT UNSIGNED,
+	username VARCHAR(255),
+	last_date DATE,
+	score SMALLINT,
+	PRIMARY KEY(quiz_id, username),
+	FOREIGN KEY(quiz_id) REFERENCES quiz(id) ON DELETE CASCADE,
+	FOREIGN KEY(username) REFERENCES user(username) ON DELETE CASCADE);
